@@ -2,7 +2,8 @@
 using projet_RPG.Engine;
 
 namespace projet_RPG.Engine {
-    public abstract class Enemy {
+    public class Enemy {
+        public int id;
         public string name;
         public float hp;
         public int str;
@@ -10,8 +11,9 @@ namespace projet_RPG.Engine {
         public int goldReward;
         public int expReward;
 
-        public Enemy(string name, float hp, int str, int def, int goldReward, int expReward)
+        public Enemy(int id, string name, float hp, int str, int def, int goldReward, int expReward)
         {
+            this.id = id;
             this.name = name;
             this.hp = hp;
             this.str = str;

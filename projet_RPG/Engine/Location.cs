@@ -8,13 +8,13 @@ namespace projet_RPG {
         public string name;
         public string desc;
         public Enemy enemyInLocation;
-        public bool canWalkThrough;
+        public Items itemInLocation;
         public Location northLocation;
         public Location southLocation;
         public Location eastLocation;
         public Location westLocation;
 
-        public Location(int id, string name, string desc, Enemy enemyInLocation = null) {
+        public Location(int id, string name, string desc, Enemy enemyInLocation = null, Items itemInLocation = null) {
             this.id = id;
             this.name = name;
             this.desc = desc;
