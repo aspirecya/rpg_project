@@ -1,34 +1,24 @@
 ﻿using System;
+using projet_RPG.Engine;
+
 namespace projet_RPG {
     public class Location {
 
-        public enum LocationType { GRASS, ROCK, CHEST, HOUSE }
-
+        public int id;
         public string name;
         public string desc;
-        public char visualisation;
-        public LocationType type;
+        public Enemy enemyInLocation;
         public bool canWalkThrough;
+        public Location northLocation;
+        public Location southLocation;
+        public Location eastLocation;
+        public Location westLocation;
 
-        public Location(string name, string desc, LocationType type) {
+        public Location(int id, string name, string desc, Enemy enemyInLocation = null) {
+            this.id = id;
             this.name = name;
             this.desc = desc;
-            this.type = type;
-
-            switch (type) {
-                case LocationType.GRASS:
-                    this.visualisation = 'G';
-                    break;
-                case LocationType.ROCK:
-                    this.visualisation = 'R';
-                    break;
-                case LocationType.CHEST:
-                    this.visualisation = 'C';
-                    break;
-                case LocationType.HOUSE:
-                    this.visualisation = 'H';
-                    break;
-            }
+            this.enemyInLocation = enemyInLocation;
         }
     }
 }

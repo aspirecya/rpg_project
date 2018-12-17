@@ -1,4 +1,6 @@
 ﻿using System;
+using projet_RPG.Engine;
+
 namespace projet_RPG {
     public class Map {
 

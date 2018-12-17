@@ -1,4 +1,6 @@
 ﻿using System;
+using projet_RPG.Engine;
+
 namespace projet_RPG {
     public abstract class Character {
         public string name;
@@ -15,7 +17,6 @@ namespace projet_RPG {
             this.sta = 1;
             this.def = 1;
             this.magic = 1;
-            this.bag = new Items[10];
         }
 
         public virtual void Attack(Character target) {

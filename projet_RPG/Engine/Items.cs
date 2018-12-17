@@ -1,12 +1,16 @@
 ﻿using System;
+using projet_RPG.Engine;
+
 namespace projet_RPG {
     public abstract class Items {
+        public int id;
         public string name;
         public string desc;
         public float value;
         public float weight;
 
-        public Items(string name, string desc, float value, float weight) {
+        public Items(int id, string name, string desc, float value, float weight) {
+            this.id = id;
             this.name = name;
             this.desc = desc;
             this.value = value;
