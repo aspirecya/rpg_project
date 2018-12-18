@@ -1,7 +1,7 @@
 ﻿using System;
 namespace projet_RPG
 {
-    public class Potions : Items {
+    public class Potions : Item {
 
         public enum PotionType { heal, defense, attack };
         public PotionType type;

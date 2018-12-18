@@ -2,12 +2,12 @@
 using projet_RPG.Engine;
 
 namespace projet_RPG.Engine {
-    public class Inventory {
+    public class ItemInInventory {
 
-        public Items item;
+        public Item item;
         public int quantity;
 
-        public Inventory(Items item, int quantity) {
+        public ItemInInventory(Item item, int quantity) {
             this.item = item;
             this.quantity = quantity;
         }
