@@ -14,11 +14,19 @@ namespace projet_RPG {
         public Location eastLocation;
         public Location westLocation;
 
-        public Location(int id, string name, string desc, Enemy enemyInLocation = null, Item itemInLocation = null) {
+        public bool HasAnItem { get { return itemInLocation != null; } }
+        public bool HasAnEnemy { get { return enemyInLocation != null; } }
+
+        public Location(int id, string name, string desc,
+                        Enemy enemyInLocation = null) {
             this.id = id;
             this.name = name;
             this.desc = desc;
             this.enemyInLocation = enemyInLocation;
+        }
+
+        public void RemoveItemFromLocation() {
+            this.itemInLocation = null;
         }
     }
 }
