@@ -19,6 +19,9 @@ namespace projet_RPG {
             this.magic = 1;
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
         public void Attack(Character target) {
             target.hp -= str;
         }
@@ -27,8 +30,5 @@ namespace projet_RPG {
             return hp <= 0;
         }
 
-        public Character CompareStrength(Character h1, Character h2) {
-            if(h1.str > h2.str) { return h1; } else { return h2; }
-        }
     }
 }

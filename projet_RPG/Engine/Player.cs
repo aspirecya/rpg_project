@@ -22,23 +22,35 @@ namespace projet_RPG {
             playerInventory = new List<ItemInInventory>();
         }
 
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
         public static Player MakeStartingPlayer(string name)
         {
             Player player = new Player(name);
-            Weapon defaultWeapon = WorldInit.GetWeapon(WorldInit.I_WOODEN_SWORD);
+            Weapon defaultWeapon = WorldInitialization.GetWeapon(WorldInitialization.ITEM_WOODEN_SWORD);
             player.currentWeapon = defaultWeapon;
-            player.playerLocation = WorldInit.GetLocation(WorldInit.L_START_ZONE);
+            player.playerLocation = WorldInitialization.GetLocation(WorldInitialization.LOC_HOME);
 
             return player;
         }
 
         public void AssignThisLocationsEnemy(Location location) {
-            currentEnemy = location.enemyInLocation;
+            this.currentEnemy = location.enemyInLocation;
         }
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
 
         public void GoTo(Location location) {
             playerLocation = location;
             AssignThisLocationsEnemy(location);
+
+            if(playerLocation.HasAnEnemy) {
+                Console.Beep();
+            }
         }
 
         public void GoNorth() {
@@ -66,8 +78,13 @@ namespace projet_RPG {
         }
 
         public void Respawn() {
-            GoTo(WorldInit.GetLocation(WorldInit.L_START_ZONE));
+            GoTo(WorldInitialization.GetLocation(WorldInitialization.LOC_HOME));
+            FullHeal();
         }
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
 
         public void AddItemToInventory(Item itemToAdd) {
             foreach (ItemInInventory itemInInv in playerInventory) {
@@ -90,26 +107,48 @@ namespace projet_RPG {
             }
         }
 
-        public void Attack(Weapon weapon) {
-            int dmg = RandomNumberGenerator.GenerateNumber(weapon.minDmg, weapon.maxDmg) - def;
 
-            if (dmg == 0) {
-                Console.WriteLine("Vous ratez lamentablement votre tentative d'attaque contre {0}...", currentEnemy.name);
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
+        public void Attack(Weapon weapon)
+        {
+            int dmg = RandomNumberGenerator.GenerateNumber(weapon.minDmg, weapon.maxDmg) + str;
+
+            if (currentEnemy != null) {
+                if (dmg == 0) {
+                    Console.WriteLine("Vous ratez lamentablement votre tentative d'attaque contre {0}...", currentEnemy.name);
+                }
+                else {
+                    currentEnemy.hp -= dmg;
+                    Console.WriteLine("Vous infligez {0} points de dégats a {1}, ça pique...", dmg, currentEnemy.name);
+                }
+
+                currentEnemy.Attack(this);
+
+                if (currentEnemy.isDead()) {
+                    Console.WriteLine("\nVous avez tuer {0}.\n+{1} GOLD", currentEnemy.name, currentEnemy.goldReward);
+                    AddExperience(currentEnemy.expReward);
+                    gold += currentEnemy.goldReward;
+                    currentEnemy = null;
+                    playerLocation.enemyInLocation = null;
+                }
             }
             else {
-                currentEnemy.hp -= dmg + str;
-                Console.WriteLine("Vous infligez {0} points de dégats a {1}, ça pique...", dmg, currentEnemy.name);
+                Console.WriteLine("Il y a aucun ennemi a attaquer.");
             }
 
-            currentEnemy.Attack(this);
-
-            if(currentEnemy.isDead()) {
-                Console.WriteLine("Vous avez tuer {0}.\n+{1} EXP\n+{2} GOLD", currentEnemy.name, currentEnemy.expReward, currentEnemy.goldReward);
-                AddExperience(currentEnemy.expReward);
-                gold += currentEnemy.goldReward;
-                currentEnemy = null;
+            if (isDead())
+            {
+                Console.WriteLine("\nVous êtes dead.\nVous vous reveillez à la maison en douleur.");
+                Respawn();
             }
         }
+
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
 
         public void Equip(int id) {
             foreach (Weapon w in playerWeapons) {
@@ -150,13 +189,21 @@ namespace projet_RPG {
             Console.WriteLine("Vous n'avez aucune potion.");
         }
 
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
         public void AddExperience(int expToAdd) {
             exp += expToAdd;
             maxhp = (level * 10);
-            str = (level * 10);
-            def = (level * 10);
+            str += (level * 1);
+            def += (level * 1);
             Console.WriteLine("Votre experience augmente... +{0} exp", expToAdd);
         }
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
 
         public void Heal(float hpToHeal) {
             hp += hpToHeal;
@@ -166,5 +213,9 @@ namespace projet_RPG {
         public void FullHeal() {
             hp = maxhp;
         }
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
     }
 }

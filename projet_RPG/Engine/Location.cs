@@ -14,8 +14,14 @@ namespace projet_RPG {
         public Location eastLocation;
         public Location westLocation;
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
         public bool HasAnItem { get { return itemInLocation != null; } }
         public bool HasAnEnemy { get { return enemyInLocation != null; } }
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
         public Location(int id, string name, string desc,
                         Enemy enemyInLocation = null) {

@@ -5,36 +5,80 @@ namespace projet_RPG {
     public class Game {
         private static Player player;
 
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
         public static void Main(string[] args) {
-            Introduction();
+            Console.Clear();
+            gameMenu();
+        }
 
-            Console.WriteLine("Tapez 'aide' pour voir la liste des commandes");
-            Console.WriteLine("");
+        static void gameMenu() {
+            Console.WriteLine("===============");
+            Console.WriteLine("1. QUIT GAME");
+            Console.WriteLine("2. QUIT GAME");
+            Console.WriteLine("3. QUIT GAME");
+            Console.WriteLine("===============");
 
-            ShowCurrentLocation();
 
-            while (true) {
-                Console.Write("+");
-                string input = Console.ReadLine();
-
-                if (input == null) {
-                    continue;
-                }
-
-                // on convertis l'input en minuscule pour faciliter la vie lors des comparaisons dans la logique PlayerAction()
-                string action = input.ToLower();
-                
-                if (action == "quitter") {
-                    Environment.Exit(0);
-                }
-
-                PlayerAction(action);
+            if (!int.TryParse(Console.ReadLine(), out int choice)) {
+                Console.WriteLine("Nope, choix incorrect.");
+                gameMenu();
             }
+
+            switch(choice) {
+                case 1:
+                    Introduction();
+
+                    Console.WriteLine("Tapez 'aide' pour voir la liste des commandes");
+                    Console.WriteLine("");
+
+                    ShowCurrentLocation();
+
+                    while (true)
+                    {
+                        Console.Write("+");
+                        string input = Console.ReadLine();
+
+                        if (input == null)
+                        {
+                            continue;
+                        }
+
+                        // on convertis l'input en minuscule pour faciliter la vie lors des comparaisons dans la logique PlayerAction()
+                        string action = input.ToLower();
+
+                        if (action == "quitter")
+                        {
+                            Environment.Exit(0);
+                        }
+
+                        PlayerAction(action);
+                    }
+
+                case 2:
+                    Console.WriteLine("work in progress");
+                    break;
+                case 3:
+                    Environment.Exit(0);
+                    break;
+            
+            }
+        }
+
+        static void Introduction()
+        {
+            Console.WriteLine("Vous vous reveillez... quel est votre nom?");
+            player = Player.MakeStartingPlayer(Console.ReadLine());
 
         }
 
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
         private static void PlayerAction(string input) {
-            if (input.Contains("nord")) {
+            if (input == "nord") {
                 if (player.playerLocation.northLocation == null) {
                     Console.WriteLine("Impossible d'aller vers le nord");
                 }
@@ -43,7 +87,7 @@ namespace projet_RPG {
                     ShowCurrentLocation();
                 }
             }
-            else if (input.Contains("est")) {
+            else if (input == "est") {
                 if (player.playerLocation.eastLocation == null) {
                     Console.WriteLine("Impossible d'aller vers l'est");
                 }
@@ -52,7 +96,7 @@ namespace projet_RPG {
                     ShowCurrentLocation();
                 }
             }
-            else if (input.Contains("sud")) {
+            else if (input == "sud") {
                 if (player.playerLocation.southLocation == null) {
                     Console.WriteLine("Impossible d'aller vers le sud");
                 }
@@ -61,7 +105,8 @@ namespace projet_RPG {
                     ShowCurrentLocation();
                 }
             }
-            else if (input.Contains("ouest")) {
+            else if (input == "ouest") {
+                Console.WriteLine("west else if");
                 if (player.playerLocation.westLocation == null) {
                     Console.WriteLine("Impossible d'aller vers l'ouest");
                 }
@@ -70,7 +115,7 @@ namespace projet_RPG {
                     ShowCurrentLocation();
                 }
             }
-            else if (input.Contains("aide") || input == "?") {
+            else if (input == "aide" || input == "?") {
                 ShowHelp();
             }
             else if (input == "stats") {
@@ -97,18 +142,21 @@ namespace projet_RPG {
                     Console.WriteLine("Vous ramassez l'objet au sol et le mettez dans votre sac.");
                 }
             }
-            else if (input.Contains("arme")) {
+            else if (input == "arme") {
                 ShowPlayerWeapons();
             }
-            else if (input.Contains("potion")) {
+            else if (input == "potion") {
                 ShowPlayerPotions();
             }
             else if (input == "inventaire" || input.Contains("inv")) {
+                if(player.playerInventory.Count == 0) {
+                    Console.WriteLine("Vous n'avez rien dans votre inventaire.");
+                }
                 foreach (ItemInInventory inventoryItem in player.playerInventory) {
-                    Console.WriteLine("{0}: {1}", inventoryItem.item.name, inventoryItem.quantity);
+                    Console.WriteLine("{0} - {1}", inventoryItem.item.name, inventoryItem.quantity);
                 }
             }
-            else if (input.Contains("attaquer") || input == "attaque") {
+            else if (input.Contains("attaquer") || input == "attaque" || input == "att") {
                 AttackMonster();
             }
             else if (input.StartsWith("equiper ") || input == "equiper") {
@@ -116,6 +164,14 @@ namespace projet_RPG {
             }
             else if (input.StartsWith("boire ") || input == "boire" ) {
                 DrinkPotion(input);
+            }
+            else if (input.StartsWith("info ") || input == "info") {
+                if (player.playerPotions.Count == 0 && player.playerWeapons.Count == 0) {
+                    Console.WriteLine("Vous n'avez aucun item à afficher.");
+                }
+                else {
+                    ShowItemInfo(input);
+                }
             }
             else if (input == "clear") {
                 Console.Clear();
@@ -132,11 +188,9 @@ namespace projet_RPG {
             Console.WriteLine("");
         }
 
-        static void Introduction() {
-            Console.WriteLine("Vous vous reveillez... quel est votre nom?");
-            player = Player.MakeStartingPlayer(Console.ReadLine());
 
-        }
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
 
         static void AttackMonster() { 
             if (!player.playerLocation.HasAnEnemy) {
@@ -150,6 +204,10 @@ namespace projet_RPG {
                 player.Attack(player.currentWeapon);
             }
         }
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
 
         static void EquipWeapon(string input)
         {
@@ -176,6 +234,10 @@ namespace projet_RPG {
             }
         }
 
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
         static void ShowCurrentLocation() {
             Console.WriteLine("{0}", player.playerLocation.name);
 
@@ -192,9 +254,30 @@ namespace projet_RPG {
         }
 
         public static void ShowPlayerWeapons() {
-            Console.WriteLine("Armes dans l'inventaire:");
-            foreach (Weapon w in player.playerWeapons) {
-                Console.WriteLine("(ID:{0}) - {1}", w.id, w.name);
+            if (player.playerWeapons.Count == 0) {
+                Console.WriteLine("Vous n'avez pas d'armes");
+            }
+            else {
+                Console.WriteLine("Armes dans l'inventaire:");
+                foreach (Weapon w in player.playerWeapons) {
+                    Console.WriteLine("(ID:{0}) - {1}", w.id, w.name);
+                }
+            }
+        }
+
+        public static void ShowItemInfo(string input) {
+            string id = input.Substring(4).Trim();
+
+            if (!int.TryParse(id, out int itemID))
+            {
+                Console.WriteLine("Aucun ID d'item reconnu.");
+
+                ShowPlayerWeapons();
+                ShowPlayerPotions();
+            }
+            else
+            {
+                Console.WriteLine("{0} - {1}", WorldInitialization.GetItem(itemID).name, WorldInitialization.GetItem(itemID).desc);
             }
         }
 
@@ -214,7 +297,7 @@ namespace projet_RPG {
         private static void ShowHelp() {
             Console.WriteLine("Commandes:");
             Console.WriteLine("stats\t\tregarder\tennemi");
-            Console.WriteLine("inventaire\tattaque(r)");
+            Console.WriteLine("inv(entaire)\tatt(aquer)");
             Console.WriteLine("armes\t\tpotions");
             Console.WriteLine("equiper <idarme>\t\tboire <idpotion>");
             Console.WriteLine("nord\tsud");
@@ -228,8 +311,11 @@ namespace projet_RPG {
             Console.WriteLine("STR: {0}\tDEF: {1}\tMAGIC: {2}", player.str, player.def, player.magic);
             Console.WriteLine("LVL: {0}\tEXP: {1}\tGOLD: {2}", player.level, player.exp, player.gold);
             if(player.currentWeapon != null) {
-                Console.WriteLine("ARME EQUIPEE: {0}", player.currentWeapon.name);
+                Console.WriteLine("ARME EQUIPEE: {0} - {1}", player.currentWeapon.id, player.currentWeapon.name);
             }
         }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
     }
 }
